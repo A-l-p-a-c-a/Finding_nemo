@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <title>Nemo Minimal Chat</title>
-  <!-- Your CSS here -->
 </head>
 <body>
-  <!-- Your chatbox HTML here -->
+  <h1>Nemo Minimal Chat</h1>
   <div id="chatbox">
     <div id="messages"></div>
     <form id="chatForm" autocomplete="off">
@@ -14,9 +13,7 @@
       <button type="submit">Send</button>
     </form>
   </div>
-  <!-- Your script goes at the bottom! -->
   <script>
-    // All your chat script here
     const form = document.getElementById("chatForm");
     const messagesDiv = document.getElementById("messages");
     const userInput = document.getElementById("userInput");
@@ -42,7 +39,7 @@
           body: JSON.stringify({ message: userMsg }),
         });
 
-        // Read once as text!
+        // Read body ONCE as text
         const raw = await res.text();
 
         let data;
