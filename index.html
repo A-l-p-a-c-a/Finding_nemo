@@ -7,8 +7,8 @@
 <body>
   <input id="prompt" placeholder="Ask your ridiculous question" />
   <button onclick="sendMessage()">Send</button>
-  <div id="response">AI reply appears here (if you can read)</div>
-
+  <div id="response">document.getElementById('response').innerText = data.reply || 'Nothing. Maybe try a better question.';
+</div>
   <script>
     async function sendMessage() {
       const prompt = document.getElementById('prompt').value;
