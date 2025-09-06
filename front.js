@@ -19,3 +19,19 @@ document.getElementById("chatForm").onsubmit = async function(e) {
     document.getElementById("chatBox").innerText += "\nBot: " + data.reply;
   }
 };
+      const raw = await res.text();
+
+        let data;
+        try {
+          data = JSON.parse(raw); // Try to parse as JSON
+        } catch (e) {
+          appendMessage("ERROR", "API did not return JSON: " + raw.slice(0, 100));
+          return;
+        }
+
+        appendMessage("NEMO", data.reply || "(no response)");
+      } catch (err) {
+        appendMessage("ERROR", "API call failed: " + err.message);
+      }
+    });
+
