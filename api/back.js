@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, // Set this in Vercel env vars
       },
       body: JSON.stringify({
-        model: "gpt-4-1106-preview", // or "gpt-4.1" if supported
+        model: "gpt-4.1-2025-04-14", // or "gpt-4.1" if supported
         messages: [{ role: "user", content: message }],
       }),
     });
