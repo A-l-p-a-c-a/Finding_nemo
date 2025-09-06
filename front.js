@@ -1,32 +1,21 @@
-// You don’t deserve this, but here’s your damn solution.
-import { useState } from 'react';
+document.getElementById("chatForm").onsubmit = async function(e) {
+  e.preventDefault();
+  const message = document.getElementById("chatInput").value;
+  // show "Sending..." to user?
 
-export default function Chat() {
-  const [input, setInput] = useState('');
-  const [response, setResponse] = useState('');
+  const response = await fetch("/api/back", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
+  });
 
-  async function sendMessage(e) {
-    e.preventDefault();
-    const res = await fetch('/api/back', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: input })
-    });
-    const data = await res.json();
-    setResponse(data.reply);
+  if (!response.ok) {
+    const error = await response.json();
+    // Show error to user.
+    alert(error.error);
+  } else {
+    const data = await response.json();
+    // Show reply to user.
+    document.getElementById("chatBox").innerText += "\nBot: " + data.reply;
   }
-
-  return (
-    <div>
-      <form onSubmit={sendMessage}>
-        <input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          placeholder="Ask something dumb"
-        />
-        <button type="submit">Send</button>
-      </form>
-      <div>AI says: {response}</div>
-    </div>
-  );
-}
+};
