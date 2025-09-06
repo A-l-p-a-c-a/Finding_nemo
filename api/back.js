@@ -1,28 +1,27 @@
+// You don’t deserve this, but here’s your damn solution.
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'GET lost.' });
+    return;
+  }
+  const { prompt } = req.body;
+  if (!prompt) {
+    res.status(400).json({ error: 'No prompt? Maybe try thinking first.' });
+    return;
   }
 
-  const { message } = req.body;
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+  const data = await response.json();
 
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4-1106-preview",
-        messages: [{ role: "user", content: message }],
-      }),
-    });
-
-    const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content || "No response";
-
-    res.status(200).json({ reply });
-  } catch (error) {
-    res.status(500).json({ error: "Internal error", details: error.message });
-  }
+  res.status(200).json({ reply: data.choices?.[0]?.message?.content || 'AI is speechless at your idiocy.' });
 }
