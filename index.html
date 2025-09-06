@@ -43,7 +43,7 @@
       userInput.value = "";
 
       try {
-        const res = await fetch("/api/back", {
+        const res = await fetch("/front.js", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: userMsg }),
