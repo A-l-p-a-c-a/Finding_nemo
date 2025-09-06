@@ -39,34 +39,8 @@
       appendMessage("YOU", userMsg);
       userInput.value = "";
 
-      try {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: userMsg }),
-        });
-
-        let data;
-        try {
-          data = await res.json();
-        } catch (e) {
-          const text = await res.text();
-          appendMessage("ERROR", "API did not return JSON: " + text.slice(0, 100));
-          return;
-        }
-
-        appendMessage("NEMO", data.reply || "(no response)");
-      } catch (err) {
-        appendMessage("ERROR", "API call failed: " + err.message);
-      }
-    });
-  </script>
-</body>
-</html>      
-
-    // <--Use relative path if deployed on Vercel
-
-        <!--const res = await fetch("/api/chat", {
+       try {
+       const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: userMsg }),
@@ -88,4 +62,34 @@
     });
 </script>
 </body>
-</html>-->
+</html>
+
+
+
+        
+          <!--const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userMsg }),
+        });
+
+        let data;
+        try {
+          data = await res.json();
+        } catch (e) {
+          const text = await res.text();
+          appendMessage("ERROR", "API did not return JSON: " + text.slice(0, 100));
+          return;
+        }
+
+        appendMessage("NEMO", data.reply || "(no response)");
+      } catch (err) {
+        appendMessage("ERROR", "API call failed: " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>-->      
+
+    
+<!--Use relative path if deployed on Vercel-->
