@@ -1,27 +1,32 @@
-// You don’t deserve this, but here’s your damn solution.
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'GET lost.' });
-    return;
-  }
-  const { prompt } = req.body;
-  if (!prompt) {
-    res.status(400).json({ error: 'No prompt? Maybe try thinking first.' });
-    return;
-  }
+  try {
+    const { message } = req.body;
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: "No API key found." });
+    }
+    // Make request to your API provider (e.g. OpenAI)
+    const apiResponse = await fetch("https://api.openai.com/v1/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "text-davinci-003",
+        prompt: message,
+        max_tokens: 100,
+      }),
+    });
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
-  const data = await response.json();
+    if (!apiResponse.ok) {
+      const err = await apiResponse.text();
+      return res.status(500).json({ error: "API error: " + err });
+    }
 
-  res.status(200).json({ reply: data.choices?.[0]?.message?.content || 'AI is speechless at your idiocy.' });
+    const data = await apiResponse.json();
+    res.status(200).json({ reply: data.choices[0].text });
+  } catch (error) {
+    res.status(500).json({ error: error.message || "Internal server error" });
+  }
 }
