@@ -3,16 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>Nemo Minimal Chat</title>
-  <style>
-    body { font-family: sans-serif; background: #f1f1f1; color: #222; text-align: center; }
-    #chatbox { max-width: 500px; margin: 50px auto; background: #fff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); padding: 24px; }
-    #messages { min-height: 120px; margin-bottom: 16px; text-align: left; }
-    input[type="text"] { width: 70%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; }
-    button { padding: 8px 16px; border: none; background: #0077ff; color: #fff; border-radius: 4px; cursor: pointer; }
-  </style>
+  <!-- Your CSS here -->
 </head>
 <body>
-  <h1>Nemo Minimal Chat</h1>
+  <!-- Your chatbox HTML here -->
   <div id="chatbox">
     <div id="messages"></div>
     <form id="chatForm" autocomplete="off">
@@ -20,7 +14,9 @@
       <button type="submit">Send</button>
     </form>
   </div>
+  <!-- Your script goes at the bottom! -->
   <script>
+    // All your chat script here
     const form = document.getElementById("chatForm");
     const messagesDiv = document.getElementById("messages");
     const userInput = document.getElementById("userInput");
@@ -39,46 +35,21 @@
       appendMessage("YOU", userMsg);
       userInput.value = "";
 
-       try {
-       const res = await fetch("/api/chat", {
+      try {
+        const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: userMsg }),
         });
 
-        let data;
-        try {
-          data = await res.json();
-        } catch (e) {
-          const text = await res.text();
-          appendMessage("ERROR", "API did not return JSON: " + text.slice(0, 100));
-          return;
-        }
-
-        appendMessage("NEMO", data.reply || "(no response)");
-      } catch (err) {
-        appendMessage("ERROR", "API call failed: " + err.message);
-      }
-    });
-</script>
-</body>
-</html>
-
-
-
-        
-          <!--const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: userMsg }),
-        });
+        // Read once as text!
+        const raw = await res.text();
 
         let data;
         try {
-          data = await res.json();
+          data = JSON.parse(raw); // Try to parse as JSON
         } catch (e) {
-          const text = await res.text();
-          appendMessage("ERROR", "API did not return JSON: " + text.slice(0, 100));
+          appendMessage("ERROR", "API did not return JSON: " + raw.slice(0, 100));
           return;
         }
 
@@ -89,7 +60,4 @@
     });
   </script>
 </body>
-</html>-->      
-
-    
-<!--Use relative path if deployed on Vercel-->
+</html>
