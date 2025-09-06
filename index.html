@@ -1,18 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Nemo Zone</title>
-  <link rel="stylesheet" href="styles/main.css">
+  <meta charset="UTF-8" />
+  <title>Nemo Minimal Chat</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>🐟 Nemo Playground</h1>
-  <p>Welcome! Every day, a new experiment appears below. No fear, just fun.</p>
-  <div id="gadget-of-the-day">
-    <!-- Today’s gadget will be loaded here -->
-    <iframe src="gadgets/gadget-2025-09-06.html" frameborder="0" width="100%" height="400"></iframe>
+  <h1>Nemo Minimal Chat</h1>
+  <div id="chatbox">
+    <div id="messages"></div>
+    <form id="chatForm" autocomplete="off">
+      <input type="text" id="userInput" placeholder="Say something..." required />
+      <button type="submit">Send</button>
+    </form>
   </div>
-  <footer>
-    <small>🧡 Nemo Labs — Gadget every day!</small>
-  </footer>
+  <script>
+    const form = document.getElementById("chatForm");
+    const messagesDiv = document.getElementById("messages");
+    const userInput = document.getElementById("userInput");
+
+    function appendMessage(sender, text) {
+      const msg = document.createElement("div");
+      msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+      messagesDiv.appendChild(msg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const userMsg = userInput.value.trim();
+      if (!userMsg) return;
+      appendMessage("YOU", userMsg);
+      userInput.value = "";
+
+      try {
+        // Use relative path if deployed on Vercel
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userMsg }),
+        });
+
+        let data;
+        try {
+          data = await res.json();
+        } catch (e) {
+          const text = await res.text();
+          appendMessage("ERROR", "API did not return JSON: " + text.slice(0, 100));
+          return;
+        }
+
+        appendMessage("NEMO", data.reply || "(no response)");
+      } catch (err) {
+        appendMessage("ERROR", "API call failed: " + err.message);
+      }
+    });
+  </script>
 </body>
 </html>
