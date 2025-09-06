@@ -3,12 +3,46 @@
 <html>
 <head>
   <title>OpenAI Comm Link—Disaster Edition</title>
+
+<style>
+    body { font-family: sans-serif; background: #f1f1f1; color: #222; text-align: center; }
+    #chatbox { 
+      max-width: 500px; 
+     margin: 50px auto; 
+      background: #fff; 
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12); 
+      padding: 24px; }
+  
+    #messages { 
+      min-height: 120px; 
+      margin-bottom: 16px; 
+      text-align: left; 
+      max-height: 300px; 
+      overflow-y: auto; } input[type="text"] { width: 70%; 
+      padding: 8px; border-radius: 4px; border: 1px solid #ddd; } 
+  
+    button { 
+      padding: 8px 16px; border: none; 
+      background: #0077ff; color: #fff; 
+      border-radius: 4px; cursor: pointer; }
+  
+     form { display: flex; gap: 8px; }
+  </style>
 </head>
-<body>
-  <input id="prompt" placeholder="Ask your ridiculous question" />
+  <body>
+<bo3>Finding Nemo Minimal Chat</h1>
+  <div id="chatbox">
+    <div id="messages"></div>
+    <form id="chatForm" autocomplete="off" onsubmit="return false;">
+      <input type="text" id="userInput" placeholder="Say something..." required />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  <!--<input id="prompt" placeholder="Ask your ridiculous question" />
   <button onclick="sendMessage()">Send</button>
   <div id="response">document.getElementById('response').innerText = data.reply || 'Nothing. Maybe try a better question.';
-</div>
+</div>-->
   <script>
     async function sendMessage() {
       const prompt = document.getElementById('prompt').value;
@@ -21,5 +55,6 @@
       document.getElementById('response').innerText = data.reply || 'Nothing. Maybe try a better question.';
     }
   </script>
+  
 </body>
 </html>
