@@ -22,7 +22,7 @@
     </form>
   </div>
 
-  <script src="/api/back.js"></script>
+  <!--<script src="/api/back.js"></script>-->
   <script>
     const form = document.getElementById("chatForm");
     const messagesDiv = document.getElementById("messages");
@@ -43,7 +43,7 @@
       userInput.value = "";
 
       try {
-        const res = await fetch("/api/chat", {
+        const res = await fetch("/api/back", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: userMsg }),
