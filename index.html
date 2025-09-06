@@ -21,8 +21,9 @@
       <button type="submit">Send</button>
     </form>
   </div>
+
   <script src="/front.js"></script>
-<script>
+  <script>
     const form = document.getElementById("chatForm");
     const messagesDiv = document.getElementById("messages");
     const userInput = document.getElementById("userInput");
@@ -64,9 +65,6 @@
         appendMessage("ERROR", "API call failed: " + err.message);
       }
     });
-</script>
-
-  
-  
+  </script>
 </body>
 </html>
