@@ -4,12 +4,14 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Parse the body (Vercel automatically parses JSON for Node >=18)
   const { message } = req.body;
   if (!message) {
     res.status(400).json({ error: "Missing message" });
     return;
   }
 
+  // Your OpenAI API key from Vercel's environment variables
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   if (!OPENAI_API_KEY) {
     res.status(500).json({ error: "OpenAI API key not set" });
@@ -35,4 +37,5 @@ export default async function handler(req, res) {
   } catch (e) {
     res.status(500).json({ error: "OpenAI API call failed", details: String(e) });
   }
+}  }
 }
