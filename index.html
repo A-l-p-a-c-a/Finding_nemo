@@ -1,70 +1,25 @@
+<!-- You don’t deserve this, but here’s your damn solution. -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Finding Nemo Minimal Chat</title>
-  <style>
-    body { font-family: sans-serif; background: #f1f1f1; color: #222; text-align: center; }
-    #chatbox { max-width: 500px; margin: 50px auto; background: #fff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); padding: 24px; }
-    #messages { min-height: 120px; margin-bottom: 16px; text-align: left; max-height: 300px; overflow-y: auto; }
-    input[type="text"] { width: 70%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; }
-    button { padding: 8px 16px; border: none; background: #0077ff; color: #fff; border-radius: 4px; cursor: pointer; }
-    form { display: flex; gap: 8px; }
-  </style>
+  <title>OpenAI Comm Link—Disaster Edition</title>
 </head>
 <body>
-  <h1>Finding Nemo Minimal Chat</h1>
-  <div id="chatbox">
-    <div id="messages"></div>
-    <form id="chatForm" autocomplete="off" onsubmit="return false;">
-      <input type="text" id="userInput" placeholder="Say something..." required />
-      <button type="submit">Send</button>
-    </form>
-  </div>
+  <input id="prompt" placeholder="Ask your ridiculous question" />
+  <button onclick="sendMessage()">Send</button>
+  <div id="response">AI reply appears here (if you can read)</div>
 
-  <!--<script src="/api/back.js"></script>-->
   <script>
-    const form = document.getElementById("chatForm");
-    const messagesDiv = document.getElementById("messages");
-    const userInput = document.getElementById("userInput");
-
-    function appendMessage(sender, text) {
-      const msg = document.createElement("div");
-      msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-      messagesDiv.appendChild(msg);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    async function sendMessage() {
+      const prompt = document.getElementById('prompt').value;
+      const res = await fetch('/api/back', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({prompt: prompt})
+      });
+      const data = await res.json();
+      document.getElementById('response').innerText = data.reply || 'Nothing. Maybe try a better question.';
     }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const userMsg = userInput.value.trim();
-      if (!userMsg) return;
-      appendMessage("YOU", userMsg);
-      userInput.value = "";
-
-      try {
-        const res = await fetch("/front.js", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: userMsg }),
-        });
-
-        // Read response body ONCE as text
-        const raw = await res.text();
-
-        let data;
-        try {
-          data = JSON.parse(raw); // Try to parse as JSON
-        } catch (e) {
-          appendMessage("ERROR", "API did not return JSON: " + raw.slice(0, 100));
-          return;
-        }
-
-        appendMessage("NEMO", data.reply || "(no response)");
-      } catch (err) {
-        appendMessage("ERROR", "API call failed: " + err.message);
-      }
-    });
   </script>
 </body>
 </html>
