@@ -1,31 +1,31 @@
-exportexport default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+// This runs on a Vercel server
+import OpenAI from 'openai';
+
+// Access the secure environment variable that Vercel provides
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { message } = req.body;
-
-  // Your OpenAI logic here
-}
-
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, // Set this in Vercel env vars
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-2025-04-14", // or "gpt-4.1" if supported
-        messages: [{ role: "user", content: message }],
-      }),
+    const { prompt } = req.body;
+    if (!prompt) {
+      return res.status(400).json({ message: 'Missing prompt in request body' });
+    }
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: prompt }],
     });
 
-    const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content || "No response";
+    res.status(200).json({ result: completion.choices.message.content });
 
-    res.status(200).json({ reply });
   } catch (error) {
-    res.status(500).json({ error: "Internal error", details: error.message });
+    console.error('Error calling OpenAI API:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 }
